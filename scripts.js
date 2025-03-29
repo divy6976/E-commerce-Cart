@@ -9,7 +9,7 @@ const products=[
 
 
 
-const cart=[];
+const cart=JSON.parse(localStorage.getItem('cart') )||[];
 
 const productList=document.getElementById("product-list");
 const cartItems=document.getElementById("cart-items");
@@ -67,8 +67,12 @@ cartTotalMessage.classList.remove('hidden');
 cart.forEach((item,index) =>{
     totalPrice +=item.price;
     const cardItem=document.createElement('div');
+    cardItem.classList.add('product');
     cardItem.innerHTML=`
-    ${item.name} - $${item.price.toFixed(2)}`
+    <span>${item.name} - $${item.price.toFixed(2)}</span>
+    <button data-id="${item.id}">Remove</button>
+    `; 
+    
     cartItems.appendChild(cardItem);
     totalPriceDisplay.innerText=`$${totalPrice.toFixed(2)}`;
    })
@@ -91,15 +95,21 @@ checkOutBtn.addEventListener('click',function(){
 
 
 
-
-
-
-
 })
-    
-    
-    
-    
+
+cartItems.addEventListener('click',function(e){
+    if(e.target.tagName==='BUTTON'){
+        const productId= parseInt(e.target.getAttribute('data-id'));
+        const productIndex=cart.findIndex(product => product.id===productId);
+        cart.splice(productIndex,1);
+        renderCart();
+    }
+    });
+  function localStorageCart(){
+    JSON.stringify(cart);
+    localStorage.setItem('cart',JSON.stringify(cart));
+}
+
     
     
     }   );
